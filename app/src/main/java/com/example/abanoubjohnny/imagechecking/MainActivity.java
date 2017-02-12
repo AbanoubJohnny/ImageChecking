@@ -241,6 +241,8 @@ public class MainActivity extends AppCompatActivity {
                                     secX)) {
                                 Log.d("sourceBitmap ",sourceBitmap.getPixel(mainY + secY, mainX + secX)+"");
                                 Log.d("serchingBitmap ",serchingBitmap.getPixel(secY,secX)+"");
+                                boolean b=sourceBitmap.getPixel(mainY + secY, mainX + secX) == serchingBitmap.getPixel(secY,secX);
+                                Log.d("equality ",b+"");
                                 found = false;
                                 break inner;
                             }
