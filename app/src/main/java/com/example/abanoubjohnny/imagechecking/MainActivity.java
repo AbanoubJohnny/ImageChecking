@@ -21,7 +21,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 //import android.graphics.BitmapFactory;
@@ -33,8 +32,6 @@ public class MainActivity extends AppCompatActivity {
     int selected;
     int width, height, width2, height2;
     int tolerance;
-    private File actualImage1, actualImage2;
-    private File compressedImage1, compressedImage2, compressedResultImage;
     Bitmap bmp1, bmp2;
     Bitmap full_bmp1, full_bmp2;
     private static int RESULT_LOAD_IMAGE = 1;
@@ -78,23 +75,6 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Match m = new Match();
                 m.execute();
-//                File file = new File(getFilesDir(), "image" + System.currentTimeMillis() + ".png");
-                //
-//                if (compareImages(bmp1, bmp2)) {
-//                    Toast.makeText(MainActivity.this, "identical", Toast.LENGTH_LONG).show();
-//                } else {
-//                    Toast.makeText(MainActivity.this, "not the same", Toast.LENGTH_LONG).show();
-//                }
-
-
-//                if (full_bmp1.getWidth() >= full_bmp2.getWidth() || full_bmp1.getHeight() >= full_bmp2.getHeight()){
-//
-//                }
-////                    run(full_bmp1, full_bmp2, file, Imgproc.TM_CCOEFF_NORMED);
-//                else{
-
-//                }
-//                    run(full_bmp2, full_bmp1, file, Imgproc.TM_CCOEFF_NORMED);
             }
         });
     }
@@ -102,11 +82,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//
-//        if(!OpenCVLoader.initDebug())
-//        OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_2_4_9,MainActivity.this,mOpenCVCallBack);
     }
-
+    /**
+     * used to get photos from the user
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -114,11 +93,6 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
 
             if (selected == 1) {
-//                try {
-//                    actualImage1 = FileUtil.from(MainActivity.this, data.getData());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 selectedImage1 = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -131,12 +105,8 @@ public class MainActivity extends AppCompatActivity {
                 cursor.close();
                 Log.d("image path", picturePath1);
                 try {
-//                    if (actualImage1.isFile())
-//                        bmp1 = Compressor.getDefault(this).compressToBitmap(actualImage1);
-//                    else
                     bmp1 = getBitmapFromUri(selectedImage1);
-                    bmp1 = toGrayscale(bmp1);
-//                    bmp1.setDensity(75);
+//                    bmp1 = toGrayscale(bmp1);
                     full_bmp1 = getBitmapFromUri(selectedImage1);
                     width = full_bmp1.getWidth();
                     height = full_bmp1.getHeight();
@@ -150,18 +120,11 @@ public class MainActivity extends AppCompatActivity {
                             tolerance = (tolerance)/2;
 
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 imageView1.setImageBitmap(full_bmp1);
 
             } else if (selected == 2) {
-
-//                try {
-//                    actualImage2 = FileUtil.from(MainActivity.this, data.getData());
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
                 selectedImage2 = data.getData();
                 String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
@@ -173,18 +136,12 @@ public class MainActivity extends AppCompatActivity {
                 picturePath2 = cursor.getString(columnIndex);
                 cursor.close();
                 try {
-//                    actualImage2 = data;
-//                    if (actualImage2.isFile())
-//                        bmp2 = Compressor.getDefault(this).compressToBitmap(actualImage2);
-//                    else
                     bmp2 = getBitmapFromUri(selectedImage2);
-                    bmp2 = toGrayscale(bmp2);
-//                    bmp2.setDensity(75);
+//                    bmp2 = toGrayscale(bmp2);
                     full_bmp2 = getBitmapFromUri(selectedImage2);
                     width2 = full_bmp2.getWidth();
                     height2 = full_bmp2.getHeight();
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
                 imageView2.setImageBitmap(full_bmp2);
@@ -193,7 +150,9 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
-
+    /**
+     * get Bitmap from a URI.
+     */
     private Bitmap getBitmapFromUri(Uri uri) throws IOException {
         ParcelFileDescriptor parcelFileDescriptor =
                 getContentResolver().openFileDescriptor(uri, "r");
@@ -203,63 +162,10 @@ public class MainActivity extends AppCompatActivity {
         return image;
     }
 
-    public static boolean compareImages(Bitmap imgA, Bitmap imgB) {
-        // The images must be the same size.
-
-        if (imgA.getWidth() == imgB.getWidth() && imgA.getHeight() == imgB.getHeight()) {
-            int width = imgA.getWidth();
-            int height = imgA.getHeight();
-
-            // Loop over every pixel.
-            for (int y = 0; y < height; y++) {
-                for (int x = 0; x < width; x++) {
-                    // Compare the pixels for equality.
-                    if (imgA.getPixel(x, y) != imgB.getPixel(x, y)) {
-
-                        return false;
-                    }
-                }
-            }
-
-
-        } else {
-            return false;
-        }
-
-        return true;
-    }
-
+    /**
+     * Ceck if an image is a subset of another.
+     */
     public boolean IsSubset(Bitmap sourceBitmap, Bitmap serchingBitmap) {
-//
-//
-
-
-//        int[] pixels = new int[sourceBitmap.getHeight() * sourceBitmap.getWidth()];
-//        sourceBitmap.getPixels(pixels, 0, sourceBitmap.getWidth(), 0, 0, sourceBitmap.getWidth(), sourceBitmap.getHeight());
-//        int[] pixels2 = new int[serchingBitmap.getHeight() * serchingBitmap.getWidth()];
-//        sourceBitmap.getPixels(pixels2, 0, serchingBitmap.getWidth(), 0, 0, serchingBitmap.getWidth(), serchingBitmap.getHeight());
-//        for (int i = 0; i < sourceBitmap.getHeight() * sourceBitmap.getWidth(); i++) {
-//            String hexColor = String.format("#%06X", (0xFFFFFF & pixels[i]));
-//            Log.d("", "pixel" + i + "" + Color.parseColor(hexColor));
-//        }
-//        for (int j = 0; j < serchingBitmap.getHeight() * serchingBitmap.getWidth(); j++) {
-//            String hexColor = String.format("#%06X", (0xFFFFFF & pixels2[j]));
-//            Log.d("", "pixel2" + j + "" + Color.parseColor(hexColor));
-//        }
-//
-//        boolean found = false;
-//        for (int i = 0; i < sourceBitmap.getHeight() * sourceBitmap.getWidth(); i++){
-//            if(pixels[i]==pixels2[0])
-//                found = true;
-//
-//            if(found)
-//                for (int j = 0; j < serchingBitmap.getHeight() * serchingBitmap.getWidth(); j++) {
-//                    if(pixels[i+j]==pixels2[0])
-//                }
-//
-//        }
-        // minimazing serching zone
-//        double lowestDiff = Double.POSITIVE_INFINITY;
         for (int mainX = 0; mainX < width - width2 + 1; mainX+=tolerance)
             for (int mainY = 0; mainY <height - height2 + 1; mainY+=tolerance) {
                 int rgb1 = sourceBitmap.getPixel(mainX, mainY);
@@ -268,7 +174,7 @@ public class MainActivity extends AppCompatActivity {
                 if (result < 10.0) {
                     Bitmap created = Bitmap.createBitmap(sourceBitmap, mainX, mainY, width2, height2);
 
-                    double result2 = compareImages3(created, serchingBitmap);
+                    double result2 = CompareImages(created, serchingBitmap);
                     if (result2 < 5.0) {
                         return true;
                     }
@@ -277,7 +183,9 @@ public class MainActivity extends AppCompatActivity {
         return false;
     }
 
-
+    /**
+     * Change any bitmape Colors to grayscale.
+     */
     public Bitmap toGrayscale(Bitmap bmpOriginal) {
         int width, height;
         height = bmpOriginal.getHeight();
@@ -293,42 +201,12 @@ public class MainActivity extends AppCompatActivity {
         c.drawBitmap(bmpOriginal, 0, 0, paint);
         return bmpGrayscale;
     }
-public static int[] findSubimage2(Bitmap im1, Bitmap im2){
-    int w1 = im1.getWidth(); int h1 = im1.getHeight();
-    int w2 = im2.getWidth(); int h2 = im2.getHeight();
-    assert(w2 <= w1 && h2 <= h1);
-    // will keep track of best position found
-    int bestX = 0; int bestY = 0; double lowestDiff = Double.POSITIVE_INFINITY;
-    // brute-force search through whole image (slow...)
-    for(int x = 0;x < w1-w2;x++){
-        for(int y = 0;y < h1-h2;y++){
-            double comp = compareImages2(Bitmap.createBitmap(im1,x,y,w2,h2),im2);
-            if(comp < lowestDiff){
-                bestX = x; bestY = y; lowestDiff = comp;
-            }
-        }
-    }
-    // output similarity measure from 0 to 1, with 0 being identical
-    System.out.println(lowestDiff);
-    // return best location
-    return new int[]{bestX,bestY};
-}
 
     /**
      * Determines how different two identically sized regions are.
      */
-    public static double compareImages2(Bitmap im1, Bitmap im2){
-        assert(im1.getHeight() == im2.getHeight() && im1.getWidth() == im2.getWidth());
-        double variation = 0.0;
-        for(int x = 0;x < im1.getWidth();x++){
-            for(int y = 0;y < im1.getHeight();y++){
-                variation += compareARGB(im1.getPixel(x,y),im2.getPixel(x,y))/Math.sqrt(3);
-            }
-        }
-        return variation/(im1.getWidth()*im1.getHeight());
-    }
 
-    public double compareImages3(Bitmap img1, Bitmap img2){
+    public double CompareImages(Bitmap img1, Bitmap img2){
         int height1 = img1.getHeight();
         int width1 = img1.getWidth();
         long diff = 0;
@@ -371,6 +249,10 @@ public static int[] findSubimage2(Bitmap im1, Bitmap im2){
         // if there is transparency, the alpha values will make difference smaller
         return p * 100.0;
     }
+
+    /**
+     * Works in background and check the inputs so as not to inturrupt the main thread .
+     */
     private class Match extends AsyncTask<String, Void, String> {
 
         @Override
@@ -384,45 +266,50 @@ public static int[] findSubimage2(Bitmap im1, Bitmap im2){
         }
         @Override
         protected String doInBackground(String... params) {
+            String s = "";
             if (bmp1 == null || bmp2 == null) {
-                Toast.makeText(MainActivity.this, "Please enter the two photos", Toast.LENGTH_LONG).show();
-                PDialog.dismiss();
+                s= "Please enter the two photos";
             }
 
             else if (bmp1.getWidth() < bmp2.getWidth() && bmp1.getHeight() < bmp2.getHeight())
             {
                 if (IsSubset(bmp2, bmp1)) {
-                    Toast.makeText(MainActivity.this, "subset", Toast.LENGTH_LONG).show();
+                    s="subset";
                 } else {
-                    Toast.makeText(MainActivity.this, "not a subset", Toast.LENGTH_LONG).show();
+                    s="not a subset";
                 }
-                PDialog.dismiss();
             }
             else if (bmp1.getWidth() > bmp2.getWidth() && bmp1.getHeight() > bmp2.getHeight())
             {
                 if (IsSubset(bmp1, bmp2)) {
-                    Toast.makeText(MainActivity.this, "subset", Toast.LENGTH_LONG).show();
+                    s="subset";
                 } else {
-                    Toast.makeText(MainActivity.this, "not a subset", Toast.LENGTH_LONG).show();
+                    s="not a subset";
                 }
-                PDialog.dismiss();
             }
             else if (bmp1.getWidth()== bmp2.getWidth() && bmp1.getHeight()== bmp2.getHeight())
             {
-                double result2 = compareImages3(bmp1, bmp2);
+                double result2 = CompareImages(bmp1, bmp2);
                 if (result2 < 5.0) {
-                    Toast.makeText(MainActivity.this, "identical", Toast.LENGTH_LONG).show();
+                    s= "identical";
                 }
                 else{
-                    Toast.makeText(MainActivity.this, "same dimentions but not identical", Toast.LENGTH_LONG).show();
+                    s="same dimentions but not identical";
                 }
-                PDialog.dismiss();
             }
             else {
 
-                Toast.makeText(MainActivity.this, "not valid photos", Toast.LENGTH_LONG).show();
-                PDialog.dismiss();
+                s= "not valid photos";
             }
+            final String finalS = s;
+            runOnUiThread(new Runnable(){
+
+                @Override
+                public void run(){
+                    Toast.makeText(MainActivity.this, finalS, Toast.LENGTH_LONG).show();
+                    Log.d("matching",finalS);
+                }
+            });
             return "Executed";
         }
 
