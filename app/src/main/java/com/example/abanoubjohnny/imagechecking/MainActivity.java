@@ -230,7 +230,6 @@ public class MainActivity extends AppCompatActivity {
         // Copy sourceBitmap to byte array
         // Serching entries
         // minimazing serching zone
-        // sourceBitmap.Height - serchingBitmap.Height + 1
         boolean found = false;
         boolean matched = true;
 
