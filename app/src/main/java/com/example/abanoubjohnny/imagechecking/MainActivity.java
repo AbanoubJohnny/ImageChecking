@@ -130,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 //                        bmp1 = Compressor.getDefault(this).compressToBitmap(actualImage1);
 //                    else
                     bmp1 = getBitmapFromUri(selectedImage1);
-                    bmp1= toGrayscale(bmp1);
+                    bmp1 = toGrayscale(bmp1);
 //                    bmp1.setDensity(75);
                     full_bmp1 = getBitmapFromUri(selectedImage1);
                     width = full_bmp1.getWidth();
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
 //                        bmp2 = Compressor.getDefault(this).compressToBitmap(actualImage2);
 //                    else
                     bmp2 = getBitmapFromUri(selectedImage2);
-                    bmp2= toGrayscale(bmp2);
+                    bmp2 = toGrayscale(bmp2);
 //                    bmp2.setDensity(75);
                     full_bmp2 = getBitmapFromUri(selectedImage2);
                     width2 = full_bmp2.getWidth();
@@ -225,57 +225,31 @@ public class MainActivity extends AppCompatActivity {
 
         if (sourceBitmap.getWidth() < serchingBitmap.getWidth() || sourceBitmap.getHeight() < serchingBitmap.getHeight())
             return false;
-
-
         // Copy sourceBitmap to byte array
         // Serching entries
         // minimazing serching zone
         boolean found = false;
-        boolean matched = true;
 
-        for (int mainY = 0; mainY < sourceBitmap.getHeight() - serchingBitmap.getHeight() + 1; mainY++) {
-            found = false;
-            matched = true;
-            for (int mainX = 0; mainX < sourceBitmap.getWidth() - serchingBitmap.getWidth() + 1; mainX++) {// mainY & mainX - pixel coordinates of sourceBitmap
-                // sourceY + sourceX = pointer in array sourceBitmap bytes
-//                    var sourceX = mainX*pixelFormatSize;
-                if (sourceBitmap.getPixel(mainX, mainY) == serchingBitmap.getPixel(0, 0)) {
+        for (int mainY = 0; mainY < sourceBitmap.getHeight() - serchingBitmap.getHeight() + 1; mainY++)
+            for (int mainX = 0; mainX < sourceBitmap.getWidth() - serchingBitmap.getWidth() + 1; mainX++)
+                if (sourceBitmap.getPixel(mainY, mainX) == serchingBitmap.getPixel(0, 0)) {
                     found = true;
-                    matched = true;
-                }
 
-                if (found) { // find fist equalation and now we go deeper)
-                    for (int secY = 1; secY < serchingBitmap.getHeight(); secY++) {
-
-                        for (int secX = 1; secX < serchingBitmap.getWidth(); secX++) {// secX & secY - coordinates of serchingBitmap
-                            // serchX + serchY = pointer in array serchingBitmap bytes
-
-                            if (sourceBitmap.getPixel(mainX+secX, mainY+secY) != serchingBitmap.getPixel(secX, secY)) {
-                                {
-                                    matched = false;
-                                    break;
-                                }
+                    inner: for (int secY = 1; secY < serchingBitmap.getHeight(); secY++)
+                        for (int secX = 1; secX < serchingBitmap.getWidth(); secX++)
+                            if (sourceBitmap.getPixel(mainY + secY, mainX + secX) != serchingBitmap.getPixel(secY,
+                                    secX)) {
+                                Log.d("sourceBitmap ",sourceBitmap.getPixel(mainY + secY, mainX + secX)+"");
+                                Log.d("serchingBitmap ",serchingBitmap.getPixel(secY,secX)+"");
+                                found = false;
+                                break inner;
                             }
-                        }
-                        //check in the small if right
-                        if (!matched)
-                            break;
-
-                    }
+                    if (found)  return true;
                 }
-                if (matched&&found) {
-                    break;
-                }
-            }
-            if (matched&&found) {
-                break;
-            }
-
-        }
-        return matched;
+        return false;
     }
-    public Bitmap toGrayscale(Bitmap bmpOriginal)
-    {
+
+    public Bitmap toGrayscale(Bitmap bmpOriginal) {
         int width, height;
         height = bmpOriginal.getHeight();
         width = bmpOriginal.getWidth();
@@ -290,4 +264,5 @@ public class MainActivity extends AppCompatActivity {
         c.drawBitmap(bmpOriginal, 0, 0, paint);
         return bmpGrayscale;
     }
+
 }
