@@ -217,14 +217,14 @@ public class MainActivity extends AppCompatActivity {
     public boolean IsSubset(Bitmap sourceBitmap, Bitmap serchingBitmap) {
 //
 //
-//        if (sourceBitmap == null || serchingBitmap == null)
-//            return false;
-//
-//        if (sourceBitmap.getConfig() != serchingBitmap.getConfig())
-//            return false;
-//
-//        if (sourceBitmap.getWidth() < serchingBitmap.getWidth() || sourceBitmap.getHeight() < serchingBitmap.getHeight())
-//            return false;
+        if (sourceBitmap == null || serchingBitmap == null)
+            return false;
+
+        if (sourceBitmap.getConfig() != serchingBitmap.getConfig())
+            return false;
+
+        if (sourceBitmap.getWidth() < serchingBitmap.getWidth() || sourceBitmap.getHeight() < serchingBitmap.getHeight())
+            return false;
 
 
         // Copy sourceBitmap to byte array
