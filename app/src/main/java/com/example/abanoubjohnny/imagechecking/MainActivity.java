@@ -171,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
                 int rgb1 = sourceBitmap.getPixel(mainX, mainY);
                 int rgb2 = serchingBitmap.getPixel(0, 0);
                 double result = compareARGB(rgb1, rgb2);
-                if (result < 10.0) {
+                if (result < 5.0) {
                     Bitmap created = Bitmap.createBitmap(sourceBitmap, mainX, mainY, width2, height2);
 
                     double result2 = CompareImages(created, serchingBitmap);
